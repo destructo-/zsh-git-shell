@@ -3,9 +3,13 @@
 _bkg=black
 _green="%B%F{green}%"
 _blue="%B%F{blue}%"
+_red="%B%F{red}%"
+_grey="%B%F{grey}%"
+_white="%B%F{white}%"
+_dark_yellow="%b%F{yellow}%"
 
-ZSH_THEME_GIT_PROMPT_PREFIX=" %{$_green}on %{$_blue}[%{$_blue}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{%f%k%b%K{${_bkg}}$_blue}]"
+ZSH_THEME_GIT_PROMPT_PREFIX=" %{$_green}on %{$_blue}["
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$_blue}]" 
 ZSH_THEME_GIT_PROMPT_DIRTY=""
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
@@ -28,8 +32,16 @@ function _prompt_char() {
   fi
 }
 
-PROMPT='%{%f%k%b%}
-%{%K{${_bkg}}$_blue}┌[%{$_green}%n%{$_blue}] %{$_green}in %{$_blue}[%{%b%F{yellow}%K{${_bkg}}%}%~%{$_blue}]$(git_prompt_info)%E%{%f%k%b%}
-%{%K{${_bkg}}%}%{$_blue}└$(_prompt_char)%{%K{${_bkg}}%}->%{%f%k%b%} '
+function _check_command_result() {
+  if [ $(echo $?) = 0 ]; then
+    echo "%{%K{black}%{$_blue}┌"
+  else
+    echo "%{%K{red}$_blue}┌[%{$_grey}COMMAND RUN FAILED%{$_blue}] "
+  fi
+}
 
+PROMPT='%{%f%k%b%}
+$(_check_command_result)[%{$_green}%n%{$_blue}] %{$_green}in %{$_blue}[%{$_dark_yellow}%~%{$_blue}]$(git_prompt_info)%E
+$_blue}└$(_prompt_char)->%{%f%k%b%} '
+        
 RPROMPT='[!%{%B%F{cyan}%}%!%{%f%k%b%}]'
