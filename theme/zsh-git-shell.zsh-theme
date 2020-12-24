@@ -1,5 +1,3 @@
-# based on blinks zsh theme
-
 _bkg=black
 _green="%B%F{green}%"
 _blue="%B%F{blue}%"
@@ -8,8 +6,8 @@ _grey="%B%F{grey}%"
 _white="%B%F{white}%"
 _dark_yellow="%b%F{yellow}%"
 
-ZSH_THEME_GIT_PROMPT_PREFIX=" %{$_green}on %{$_blue}["
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$_blue}]" 
+ZSH_THEME_GIT_PROMPT_PREFIX=" %{$_green}on %{$_blue}[%{$_blue}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{%f%k%b%K{${_bkg}}$_blue}]"
 ZSH_THEME_GIT_PROMPT_DIRTY=""
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
@@ -36,12 +34,16 @@ function _check_command_result() {
   if [ $(echo $?) = 0 ]; then
     echo "%{%K{black}%{$_blue}┌"
   else
-    echo "%{%K{red}$_blue}┌[%{$_grey}COMMAND RUN FAILED%{$_blue}] "
+    echo "%{%K{black}$_blue}┌[%K{red}%{$_grey}BREAK%{$_blue}%K{black}] "
   fi
 }
 
+function _kuber_env() {
+  echo " %{$_green}K8S %{$_blue}[%{$_dark_yellow}$(kubectx -c)%{$_blue}]"
+}
+
 PROMPT='%{%f%k%b%}
-$(_check_command_result)[%{$_green}%n%{$_blue}] %{$_green}in %{$_blue}[%{$_dark_yellow}%~%{$_blue}]$(git_prompt_info)%E
+$(_check_command_result)[%{$_green}%n%{$_blue}] %{$_green}in %{$_blue}[%{$_dark_yellow}%~%{$_blue}]$(git_prompt_info)$(_kuber_env)%E
 $_blue}└$(_prompt_char)->%{%f%k%b%} '
-        
+
 RPROMPT='[!%{%B%F{cyan}%}%!%{%f%k%b%}]'
